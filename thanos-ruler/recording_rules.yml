@@ -1,0 +1,18 @@
+groups:
+  - name: recording_rules
+    interval: 30s
+    rules:
+## Linux CPU Usage
+      - record: instance:linux_cpu_usage:avg
+        expr: 100 - (avg without(cpu, mode) (rate(node_cpu_seconds_total{mode='idle',instance_name="sentrytest"}[2m])) * 100)
+
+## Linux Memory Usage
+      - record: instance:linux_memory_usage:avg
+        expr: 100 * (1 - (node_memory_MemAvailable_bytes{instance_name="sentrytest"} / node_memory_MemTotal_bytes{instance_name="sentrytest"}))
+
+## Linux Disk usage
+      - record: instance:linux_disk_usage:avg
+        expr: sum without (device) ((node_filesystem_size_bytes{fstype=~'ext.*|xfs.*',instance_name="sentrytest"} - node_filesystem_free_bytes{fstype=~'ext.*|xfs.*',instance_name="sentrytest"}) /node_filesystem_size_bytes{fstype=~'ext.*|xfs.*',instance_name="sentrytest"} * 100)
+
+      # - record: client:alert_count
+      #   expr: count(ALERTS{alertstate="firing"}) by (ClientName)

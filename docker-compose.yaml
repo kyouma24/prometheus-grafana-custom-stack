@@ -15,33 +15,28 @@ services:
     ports:
       - 1783:9090
     command:
-      - '--config.file=/etc/prometheus/prometheus.yaml'
+      - '--config.file=/etc/prometheus/prometheus.yml'
     volumes:
-      - ./config/:/etc/prometheus/
+      - ./prometheus/:/etc/prometheus/
       - ./data:/prometheus/data/
-    restart: unless-stopped
-#### BlackBox ####
-  blackbox:
-    image: prom/blackbox-exporter
-    volumes:
-      - ./blackbox/blackbox.yaml:/etc/blackbox_exporter/config.yml
-    command:
-      - '--config.file=/etc/blackbox_exporter/config.yml'
-    ports:
-      - '9115:9115'
     restart: unless-stopped
 #### Grafana ####
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana:custom
     container_name: grafana
     ports:
       - '3000:3000'
     volumes:
       - grafana-data:/var/lib/grafana
+      - ./grafana/custom.ini:/etc/grafana/grafana.ini
+      - ./grafana/defaults.ini:/usr/share/grafana/conf/defaults.ini
     environment:
       GF_RENDERING_SERVER_URL: http://renderer:8081/render
       GF_RENDERING_CALLBACK_URL: http://grafana:3000/
       GF_LOG_FILTERS: rendering:debug
+      GF_FEATURE_TOGGLES_ENABLE: "ngalert"
+      GF_ALERTING_ENABLE: "true"
+      GF_ALERTING_EXECUTION_MODE: "legacy"
     restart: unless-stopped
 #### Grafana Renderer ####
   renderer:
@@ -61,41 +56,128 @@ services:
     command:
       sh /documents/startup.sh
     restart: unless-stopped
-#### AlertManager ####
-  alertmanager:
-    image: prom/alertmanager:latest
-    container_name: alertmanager
+
+### For MCPI
+  mcpi-reporter:
+    image: asciidoctor/docker-asciidoctor
+    container_name: mcpi-reporter
     ports:
-      - "9093:9093"
+      - "8816:8816"
+    hostname: asciidoctor
     volumes:
-      - ./alert:/etc/alertmanager
-    restart: unless-stopped
-### YACE (Yet-another Cloudwatch Exporter) ####
-  yace:
-    build:
-      context: ./yet-another-cloudwatch-exporter
-      dockerfile: Dockerfile
-    restart: unless-stopped
-    environment:
-      AWS_REGION: ap-south-1
-    ports:
-      - "8099:8099"
-    volumes:
-      - ./yace/yace-config.yaml:/tmp/config.yml
+      - ./mcpi-reporter:/documents
     command:
-      - -listen-address=:8099
-      - -config.file=/tmp/config.yml
+      sh /documents/startup.sh
+    restart: unless-stopped
+
+### My Org reporter
+  my-org:
+    image: asciidoctor/docker-asciidoctor
+    container_name: my-org
+    ports:
+      - "8817:8817"
+    hostname: asciidoctor
+    volumes:
+      - ./my-org:/documents
+    command:
+      sh /documents/startup.sh
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"   # Rotate logs after 10MB
+        max-file: "5"     # Keep last 5 log files
+
+  prometheus-sidecar:
+    image: quay.io/thanos/thanos:v0.28.0
+    container_name: prometheus-sidecar
+    ports:
+      - "19090:19090"
+    network_mode: "host"
+    restart: unless-stopped  # automatically restart the container on failure
+    command:
+      - "sidecar"  # command to run
+      - "--http-address=0.0.0.0:19090"  # http address for the sidecar
+      - "--grpc-address=0.0.0.0:19190"  # grpc address for the sidecar
+      - "--prometheus.url=http://10.192.10.152:1783"  # url of the main prometheus server
+
+  thanos-query:
+    image: quay.io/thanos/thanos:v0.28.0
+    container_name: query
+    network_mode: "host"
+    restart: unless-stopped
+    command:
+      - "query"
+      - "--http-address=0.0.0.0:39090"
+      - "--store=0.0.0.0:10907"
+      - "--store=0.0.0.0:10903"
+      - "--store=0.0.0.0:9001"
+
+  thanos-receive:
+    image: quay.io/thanos/thanos:v0.28.0
+    container_name: receive-1
+    network_mode: "host"
+    volumes:
+      - ./new-data:/receive/data
+    restart: unless-stopped
+    command:
+      - "receive"
+      - "--tsdb.path=/receive/data"
+      - "--grpc-address=0.0.0.0:10907"
+      - "--http-address=0.0.0.0:10909"
+      - "--tsdb.retention=6h"
+      - "--label=receive_cluster=\"test\""
+      - "--objstore.config-file=/receive/data/new-s3-storage.yaml"
+      - "--remote-write.address=0.0.0.0:10908"
+
+  thanos-store-gw:
+     image: quay.io/thanos/thanos:v0.28.0
+     container_name: store
+     network_mode: "host"
+     restart: unless-stopped
+     volumes:
+      - ./dtstore:/receive/data
+     command:
+       - "store"
+       - "--objstore.config-file=/receive/data/sidecar.yaml"
+       - "--http-address=0.0.0.0:10904"
+       - "--grpc-address=0.0.0.0:10903"
+
+  thanos-store-gw-dr:
+     image: quay.io/thanos/thanos:v0.28.0
+     container_name: store-dr
+     network_mode: "host"
+     restart: unless-stopped
+     volumes:
+      - ./new-data:/receive/data
+     command:
+       - "store"
+       - "--objstore.config-file=/receive/data/new-s3-storage.yaml"
+       - "--http-address=0.0.0.0:9000"
+       - "--grpc-address=0.0.0.0:9001"
 
 
-
-
-
-
-
-      	
-
-
-
-        
-
+  # thanos-compactor:
+  #   image: quay.io/thanos/thanos:v0.28.0
+  #   container_name: thanos-compactor
+  #   ports:
+  #     - "10910:10910" # HTTP endpoint for metrics and health
+  #   network_mode: "host"
+  #   restart: unless-stopped
+  #   command:
+  #     - "compact"
+  #     - "--data-dir=/tmp/thanos-compact"
+  #     - "--objstore.config-file=/receive/data/new-s3-storage.yaml"
+  #     - "--retention.resolution-raw=60d"
+  #     - "--retention.resolution-5m=1y"
+  #     - "--retention.resolution-1h=5y"
+  #     - "--compact.concurrency=5"
+  #     - "--log.level=info"
+  #     - "--log.format=json"
+  #     - "--wait"
+  #     - "--wait-interval=10m"
+  #   volumes:
+  #     - ./thanos-compact-data:/tmp/thanos-compact
+  #     - ./config:/receive/data/
+  #
 

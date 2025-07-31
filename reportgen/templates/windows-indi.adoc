@@ -1,0 +1,14 @@
+:pdf-theme: /home/ubuntu/grafana-pro/reportgen/themes/custom-theme.yml
+:imagesdir: ./images
+ 
+[.text-center]
+image::logo-minfy.png[300,200,float="right",align="center"]
+ 
+[.text-center]
+= MinfySentrySystem
+:grafana_default_dashboard: -gjIslqnz
+:grafana_default_timeout: 300
+
+grafana_panel_image:16[scale=75, render-height="600", render-width="800", render-timeout="300"]
+grafana_panel_image:17[scale=75, render-height="600", render-width="800", render-timeout="300"]
+grafana_panel_image:18[scale=75, render-height="600", render-width="800", render-timeout="300"]

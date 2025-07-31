@@ -1,0 +1,18 @@
+grafana:
+  default:
+    host: http://3.111.71.74:3000
+    api_key: glsa_nnRscoPFJho4hjxYg3YRHn0LLMLVG4Jj_132afc21
+
+grafana-reporter:
+# Specifies how often the reporter shall check for newer versions [number of days].
+# You may set check-for-updates to 0 to disable
+  check-for-updates: 7
+  report-class: GrafanaReporter::Asciidoctor::Report
+  templates-folder: ./templates
+  reports-folder: ./reports
+  report-retention: 168
+  webservice-port: 8815
+  enable_api: true
+
+default-document-attributes:
+  imagesdir: ./images

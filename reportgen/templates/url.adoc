@@ -1,0 +1,11 @@
+:pdf-theme: /home/ubuntu/grafana-pro/reportgen/themes/custom-theme.yml
+:imagesdir: ./images
+
+[.text-center]
+image::logo-minfy.png[300,200,float="right",align="center"]
+
+[.text-center]
+= MinfySentrySystem
+:grafana_default_dashboard: NEzutrbMk
+
+grafana_panel_image:2[scale=75, render-height="1250", render-width="1350]

@@ -1,0 +1,27 @@
+:pdf-theme: /home/ubuntu/grafana-pro/reportgen/themes/custom-theme.yml
+:imagesdir: ./images
+
+[.text-center]
+image::logo-minfy.png[300,200,float="right",align="center"]
+
+[.text-center]
+= MinfySentrySystem
+:grafana_default_dashboard: rYdddlPWkL1
+
+grafana_panel_image:1[scale=55, render-height="1250",render-width="1750"]
+[cols="8*",options="header"]
+|===
+| grafana_panel_image:7[scale=35,render-height="125",render-width="125"]
+| grafana_panel_image:8[scale=35,render-height="125",render-width="125"]
+| grafana_panel_image:9[scale=35,render-height="125",render-width="125"]
+| grafana_panel_image:10[scale=35,render-height="125",render-width="125"]
+| grafana_panel_image:11[scale=35,render-height="125",render-width="125"]
+| grafana_panel_image:12[scale=35,render-height="125",render-width="125"]
+| grafana_panel_image:13[scale=35,render-height="125",render-width="125"]
+| grafana_panel_image:14[scale=35,render-height="125",render-width="125"]
+|===
+=grafana_panel_image:15[scale=125, render-height="400", render-width="1250"]
+grafana_panel_image:16[scale=125, render-height="400", render-width="1250"]
+grafana_panel_image:17[scale=125, render-height="400", render-width="1250"]
+grafana_panel_image:18[scale=125, render-height="400", render-width="1250"]
+grafana_panel_image:19[scale=125, render-height="400", render-width="1250"]

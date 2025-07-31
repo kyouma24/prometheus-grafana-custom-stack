@@ -1,0 +1,27 @@
+grafana_panel_image:20[dashboard="ediskdcksqz28e",width="100%"]
+
+$ cat templates/power_report_test.adoc 
+// https://docs.asciidoctor.org/asciidoc/latest/
+= Lab energy report
+
+[.text-center]
+{localdatetime}
+
+== Rack 01
+
+[cols="h,1"]
+|===
+|PDU|kWh
+
+|Left
+|grafana_panel_query_value:1[dashboard="fdn1njnosc83ke",query="Rack01Left",select_value="last",from="now/M",to="now",instant="true",format="%.2f,%.2f",filter_columns="Time"]
+
+|Right
+|grafana_panel_query_value:1[dashboard="fdn1njnosc83ke",query="Rack01Right",select_value="last",from="now/M",to="now",instant="true",format="%.2f,%.2f",filter_columns="Time"]
+
+|Left + Right
+|grafana_panel_query_value:1[dashboard="fdn1njnosc83ke",query="Rack01Sum",select_value="last",from="now/M",to="now",instant="true",format="%.2f,%.2f",filter_columns="Time"] 
+|===
+
+grafana_panel_image:1[dashboard="fdn1njnosc83ke",width="100%"]
+grafana_panel_image:2[dashboard="fdn1njnosc83ke",width="100%"]

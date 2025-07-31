@@ -1,0 +1,16 @@
+groups:
+  - name: test_alerts
+    interval: 1m
+    rules:
+      - alert: SERVERUP
+        expr: up{instance_name=~".*entryte.*"} == 1
+        for: 15s
+        labels:
+          severity: critical
+          category: test
+        annotations:
+          summary: "Server {{ $labels.instance_name }} is up"
+          description: "Test Alert: Server is up."
+          VALUE: "{{ $value }}"
+          LABELS: "{{ $labels }}"
+

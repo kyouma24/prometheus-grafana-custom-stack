@@ -1,0 +1,22 @@
+:pdf-theme: /home/ubuntu/grafana-pro/reportgen/themes/custom-theme.yml
+:imagesdir: ./images
+ 
+[.text-center]
+image::logo-minfy.png[300,200,float="right",align="center"]
+ 
+[.text-center]
+= MinfySentrySystem
+:grafana_default_dashboard: -gjIslqnz
+:grafana_default_timeout: 300
+:to: ${__to}
+:fromdate: ${__from:date:YYYY-MM-DD HH:mm:ss}
+:todate: ${__to:date:YYYY-MM-DD HH:mm:ss}
+:page-interpolate: true
+
+
+grafana_panel_image:1[scale=41, render-height="1250",render-width="1750"]
+grafana_panel_image:2[scale=75, render-height="825"]
+grafana_panel_image:3[scale=75, render-height="825"]
+grafana_panel_image:4[scale=75, render-height="825"]
+grafana_panel_image:5[scale=75, render-height="825"]
+grafana_panel_image:6[scale=75, render-height="825"]

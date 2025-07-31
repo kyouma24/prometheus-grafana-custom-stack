@@ -1,0 +1,49 @@
+= Demo report
+
+Created by `+ruby-grafana-reporter+` version 0.9.4
+
+== Examples
+
+=== AlertsTableIncludeProcessor
+
+No example found for GrafanaReporter::Asciidoctor::AlertsTableIncludeProcessor in the dashboards.
+
+=== AnnotationsTableIncludeProcessor
+
+No example found for GrafanaReporter::Asciidoctor::AnnotationsTableIncludeProcessor in the dashboards.
+
+=== PanelImageBlockMacro
+
+No example found for GrafanaReporter::Asciidoctor::PanelImageBlockMacro in the dashboards.
+
+=== PanelImageInlineMacro
+
+No example found for GrafanaReporter::Asciidoctor::PanelImageInlineMacro in the dashboards.
+
+=== PanelPropertyInlineMacro
+
+No example found for GrafanaReporter::Asciidoctor::PanelPropertyInlineMacro in the dashboards.
+
+=== PanelQueryTableIncludeProcessor
+
+No example found for GrafanaReporter::Asciidoctor::PanelQueryTableIncludeProcessor in the dashboards.
+
+=== PanelQueryValueInlineMacro
+
+No example found for GrafanaReporter::Asciidoctor::PanelQueryValueInlineMacro in the dashboards.
+
+=== SqlTableIncludeProcessor
+
+No example found for GrafanaReporter::Asciidoctor::SqlTableIncludeProcessor in the dashboards.
+
+=== SqlValueInlineMacro
+
+No example found for GrafanaReporter::Asciidoctor::SqlValueInlineMacro in the dashboards.
+
+=== ShowHelpIncludeProcessor
+
+No example found for GrafanaReporter::Asciidoctor::ShowHelpIncludeProcessor in the dashboards.
+
+=== ShowEnvironmentIncludeProcessor
+
+No example found for GrafanaReporter::Asciidoctor::ShowEnvironmentIncludeProcessor in the dashboards.
